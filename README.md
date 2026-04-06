@@ -16,30 +16,26 @@ No modifications to the official Telegram plugin required.
 ## Prerequisites
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with the [Telegram plugin](https://github.com/anthropics/claude-plugins-official) installed
-- [Bun](https://bun.sh) runtime
 - A transcription tool of your choice (see examples below)
 
 ## Installation
 
-### 1. Install the plugin
-
-In Claude Code:
+### From marketplace (when available)
 
 ```
-/plugin install claude-telegram-voice@custom
+/plugin install claude-telegram-voice
 ```
 
-Or manually clone to `~/.claude/plugins/claude-telegram-voice` and add to `~/.claude/settings.json`:
+### Local testing
 
-```json
-{
-  "enabledPlugins": {
-    "claude-telegram-voice@custom": true
-  }
-}
+```bash
+git clone https://github.com/Undermove/claude-telegram-voice.git
+claude --plugin-dir ./claude-telegram-voice --channels plugin:telegram@claude-plugins-official
 ```
 
-### 2. Create a transcription script
+## Setup
+
+### 1. Create a transcription script
 
 The plugin calls your script with one argument — the path to an `.ogg` audio file. Your script must print the transcription to stdout.
 
@@ -47,7 +43,7 @@ The plugin calls your script with one argument — the path to an `.ogg` audio f
 
 ```bash
 #!/bin/bash
-# transcribe.sh — uses OpenAI Whisper locally
+# transcribe.sh
 whisper "$1" --model small --language ru --output_format txt --output_dir /tmp 2>/dev/null
 cat "/tmp/$(basename "${1%.*}").txt"
 rm -f "/tmp/$(basename "${1%.*}").txt"
@@ -59,8 +55,8 @@ Install Whisper: `pip install openai-whisper`
 
 ```bash
 #!/bin/bash
-# transcribe.sh — uses faster-whisper (GPU-accelerated)
-faster-whisper "$1" --model small --language ru 2>/dev/null | grep -v '^\[' 
+# transcribe.sh
+faster-whisper "$1" --model small --language ru 2>/dev/null | grep -v '^\['
 ```
 
 Install: `pip install faster-whisper`
@@ -69,13 +65,13 @@ Install: `pip install faster-whisper`
 
 ```bash
 #!/bin/bash
-# transcribe.sh — uses OpenAI Whisper API (no local GPU needed)
+# transcribe.sh
 curl -s https://api.openai.com/v1/audio/transcriptions \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -F file="@$1" -F model="whisper-1" | jq -r .text
 ```
 
-Make the script executable:
+### 2. Make the script executable
 
 ```bash
 chmod +x /path/to/transcribe.sh
@@ -91,7 +87,7 @@ VOICE_TRANSCRIBE_CMD=/path/to/transcribe.sh
 
 Or set it in your shell before launching Claude Code.
 
-### 4. Restart Claude Code
+### 4. Launch Claude Code
 
 ```bash
 claude --channels plugin:telegram@claude-plugins-official
@@ -103,19 +99,22 @@ Send a voice message — Claude will automatically transcribe and respond to it.
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `VOICE_TRANSCRIBE_CMD` | Yes | Path to a script that accepts an audio file path as an argument and prints transcription to stdout |
+| `VOICE_TRANSCRIBE_CMD` | Yes | Path to a script that accepts an audio file path and prints transcription to stdout |
 
-The transcription command has a 2-minute timeout. If it fails, Claude will let you know and ask you to resend as text.
+Any tool works — as long as it reads the audio file and prints text to stdout. If the script fails, Claude will let the user know and ask them to resend as text.
 
-## How it differs from patching the Telegram plugin
+## Plugin structure
 
-This plugin works **alongside** the official Telegram plugin without modifying it:
-
-- The Telegram plugin delivers voice messages with a `file_id`
-- This plugin adds a **skill** that tells Claude to download and transcribe voice messages automatically
-- This plugin adds a **transcribe tool** (MCP server) that runs your transcription command
-
-This means updates to the official Telegram plugin won't break anything.
+```
+claude-telegram-voice/
+├── .claude-plugin/
+│   └── plugin.json          # Plugin manifest
+├── skills/
+│   └── voice-transcription/
+│       └── SKILL.md         # Auto-trigger skill
+├── README.md
+└── LICENSE
+```
 
 ## License
 

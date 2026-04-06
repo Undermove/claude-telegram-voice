@@ -1,9 +1,0 @@
-{
-  "name": "claude-telegram-voice",
-  "version": "0.1.0",
-  "description": "Claude Code plugin: automatic voice message transcription for the Telegram channel",
-  "license": "MIT",
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
-  }
-}
