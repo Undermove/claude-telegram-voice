@@ -35,7 +35,19 @@ claude --plugin-dir ./claude-telegram-voice --channels plugin:telegram@claude-pl
 
 ## Setup
 
-### 1. Create a transcription script
+### Quick setup (recommended)
+
+After installing the plugin, run the setup command in Claude Code:
+
+```
+/claude-telegram-voice:setup
+```
+
+It will check your system, help you install a transcription tool if needed, create the script, and configure everything automatically.
+
+### Manual setup
+
+#### 1. Create a transcription script
 
 The plugin calls your script with one argument — the path to an `.ogg` audio file. Your script must print the transcription to stdout.
 
@@ -71,13 +83,13 @@ curl -s https://api.openai.com/v1/audio/transcriptions \
   -F file="@$1" -F model="whisper-1" | jq -r .text
 ```
 
-### 2. Make the script executable
+#### 2. Make the script executable
 
 ```bash
 chmod +x /path/to/transcribe.sh
 ```
 
-### 3. Configure the environment variable
+#### 3. Configure the environment variable
 
 Add to `~/.claude/channels/telegram/.env`:
 
@@ -87,7 +99,7 @@ VOICE_TRANSCRIBE_CMD=/path/to/transcribe.sh
 
 Or set it in your shell before launching Claude Code.
 
-### 4. Launch Claude Code
+#### 4. Launch Claude Code
 
 ```bash
 claude --channels plugin:telegram@claude-plugins-official
@@ -109,6 +121,9 @@ Any tool works — as long as it reads the audio file and prints text to stdout.
 claude-telegram-voice/
 ├── .claude-plugin/
 │   └── plugin.json          # Plugin manifest
+│   └── marketplace.json     # Marketplace config
+├── commands/
+│   └── setup.md             # /claude-telegram-voice:setup command
 ├── skills/
 │   └── voice-transcription/
 │       └── SKILL.md         # Auto-trigger skill
