@@ -1,0 +1,25 @@
+{
+  "name": "claude-telegram-voice",
+  "owner": {
+    "name": "Undermove"
+  },
+  "metadata": {
+    "description": "Automatic voice message transcription for the Claude Code Telegram channel"
+  },
+  "plugins": [
+    {
+      "name": "claude-telegram-voice",
+      "source": ".",
+      "description": "Automatically transcribes Telegram voice messages using a user-supplied command (Whisper, faster-whisper, OpenAI API, etc.), so Claude receives spoken text instead of a bare file reference.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Undermove"
+      },
+      "homepage": "https://github.com/Undermove/claude-telegram-voice",
+      "repository": "https://github.com/Undermove/claude-telegram-voice",
+      "license": "MIT",
+      "keywords": ["telegram", "voice", "transcription", "whisper", "speech-to-text"],
+      "category": "productivity"
+    }
+  ]
+}
