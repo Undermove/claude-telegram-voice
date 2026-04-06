@@ -1,0 +1,13 @@
+{
+  "name": "claude-telegram-voice",
+  "description": "Automatic voice message transcription for the Telegram channel plugin. When a voice message arrives, it's downloaded and transcribed using a user-supplied command (Whisper, faster-whisper, OpenAI API, etc.), so Claude receives spoken text instead of a bare file reference.",
+  "version": "0.1.0",
+  "author": "Undermove",
+  "homepage": "https://github.com/Undermove/claude-telegram-voice",
+  "skills": {
+    "voice-transcription": {
+      "file": "skills/voice-transcription/SKILL.md",
+      "description": "Automatically transcribe Telegram voice messages when they arrive"
+    }
+  }
+}
