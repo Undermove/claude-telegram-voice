@@ -17,14 +17,29 @@ import {
   CallToolRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 import { execFileSync } from 'child_process'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
+import { homedir } from 'os'
+import { join } from 'path'
+
+// Load ~/.claude/channels/telegram/.env — same file the Telegram plugin reads.
+// This lets users configure VOICE_TRANSCRIBE_CMD alongside TELEGRAM_BOT_TOKEN.
+const ENV_FILE = join(
+  process.env.TELEGRAM_STATE_DIR ?? join(homedir(), '.claude', 'channels', 'telegram'),
+  '.env',
+)
+try {
+  for (const line of readFileSync(ENV_FILE, 'utf8').split('\n')) {
+    const m = line.match(/^(\w+)=(.*)$/)
+    if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2]
+  }
+} catch {}
 
 const VOICE_CMD = process.env.VOICE_TRANSCRIBE_CMD ?? ''
 
 if (!VOICE_CMD) {
   process.stderr.write(
     `voice-transcription: VOICE_TRANSCRIBE_CMD is not set.\n` +
-    `  Set it in your shell or in ~/.claude/channels/telegram/.env\n` +
+    `  Set it in ~/.claude/channels/telegram/.env or in your shell.\n` +
     `  Example: VOICE_TRANSCRIBE_CMD=/path/to/transcribe.sh\n`,
   )
 }
