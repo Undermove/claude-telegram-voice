@@ -18,32 +18,30 @@ No modifications to the official Telegram plugin required.
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with the [Telegram plugin](https://github.com/anthropics/claude-plugins-official) installed
 - A transcription tool of your choice (see examples below)
 
-## Installation
+## Quick start (4 steps)
 
-### From marketplace (when available)
+```
+/plugin marketplace add Undermove/claude-telegram-voice
+/plugin install claude-telegram-voice
+/claude-telegram-voice:setup
+```
+
+Then restart Claude Code — done! The setup command will check your system, help install a transcription tool if needed, and configure everything automatically.
+
+## Alternative installation
+
+### From official marketplace (when available)
 
 ```
 /plugin install claude-telegram-voice
 ```
 
-### Local testing
+### Local / development
 
 ```bash
 git clone https://github.com/Undermove/claude-telegram-voice.git
 claude --plugin-dir ./claude-telegram-voice --channels plugin:telegram@claude-plugins-official
 ```
-
-## Setup
-
-### Quick setup (recommended)
-
-After installing the plugin, run the setup command in Claude Code:
-
-```
-/claude-telegram-voice:setup
-```
-
-It will check your system, help you install a transcription tool if needed, create the script, and configure everything automatically.
 
 ### Manual setup
 
